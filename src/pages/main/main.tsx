@@ -450,6 +450,34 @@ const EditParkingLotModal = ({ onClose }: { onClose: () => void }) => {
                 onClick={() => setFeeEnabled((value) => !value)}
               />
             </div>
+            {feeEnabled ? (
+              <>
+                <Field
+                  label="기본 요금"
+                  placeholder="기본 요금 입력"
+                  inputMode="numeric"
+                  icon="uil:sort"
+                />
+                <Field
+                  label="기본 요금 적용 시간 (분)"
+                  placeholder="기본 요금 적용 시간 입력"
+                  inputMode="numeric"
+                  icon="uil:sort"
+                />
+                <Field
+                  label="추가 요금"
+                  placeholder="추가 요금 입력"
+                  inputMode="numeric"
+                  icon="uil:sort"
+                />
+                <Field
+                  label="추가 요금 단위 시간 (분)"
+                  placeholder="추가 요금 단위 시간 입력"
+                  inputMode="numeric"
+                  icon="uil:sort"
+                />
+              </>
+            ) : null}
           </div>
           <Button type="submit" className="w-full">
             수정하기
