@@ -388,52 +388,77 @@ const CameraModal = ({ onClose }: { onClose: () => void }) => (
   </ModalBackdrop>
 );
 
-const EditFeeToggle = () => (
+const EditFeeToggle = ({
+  enabled,
+  onClick,
+}: {
+  enabled: boolean;
+  onClick: () => void;
+}) => (
   <button
     type="button"
-    className="flex h-6 w-14 items-center justify-between overflow-hidden rounded-full bg-slate-300 p-1 text-white"
+    onClick={onClick}
+    aria-pressed={enabled}
+    className={`flex h-6 w-14 items-center justify-between overflow-hidden rounded-full py-1 text-white ${
+      enabled ? "bg-blue-500 pl-1.5 pr-1" : "bg-slate-300 pl-1 pr-1.5"
+    }`}
   >
-    <span className="size-4 rounded-full bg-white" />
-    <span className="text-xs font-black leading-4">OFF</span>
+    {enabled ? (
+      <span className="text-xs font-black leading-4">ON</span>
+    ) : (
+      <span className="size-4 rounded-full bg-white" />
+    )}
+    {enabled ? (
+      <span className="size-4 rounded-full bg-white" />
+    ) : (
+      <span className="text-xs font-black leading-4">OFF</span>
+    )}
   </button>
 );
 
-const EditParkingLotModal = ({ onClose }: { onClose: () => void }) => (
-  <ModalBackdrop onClose={onClose}>
-    <Panel className="min-h-[336px] max-w-[384px] rounded-md border-0 p-3.5 shadow-[0_0_16px_4px_rgba(0,0,0,0.25)]">
-      <form
-        className="flex flex-col gap-2.5"
-        onSubmit={(event) => {
-          event.preventDefault();
-          onClose();
-        }}
-      >
-        <h2 className="text-sm font-semibold leading-5 text-slate-500">
-          주차장 수정
-        </h2>
-        <div className="flex min-h-[232px] w-full flex-col justify-center gap-2.5">
-          <Field label="주차장 이름 *" placeholder="주차장 이름 입력" />
-          <Field label="주소" placeholder="주소 입력" />
-          <Field
-            label="주차 가능 대수 *"
-            placeholder="주차 가능 대수 입력"
-            inputMode="numeric"
-            icon="uil:sort"
-          />
-          <div className="flex w-full items-center justify-between">
-            <span className="text-sm font-normal leading-5 text-slate-800">
-              요금
-            </span>
-            <EditFeeToggle />
+const EditParkingLotModal = ({ onClose }: { onClose: () => void }) => {
+  const [feeEnabled, setFeeEnabled] = useState(false);
+
+  return (
+    <ModalBackdrop onClose={onClose}>
+      <Panel className="min-h-[336px] max-w-[384px] rounded-md border-0 p-3.5 shadow-[0_0_16px_4px_rgba(0,0,0,0.25)]">
+        <form
+          className="flex flex-col gap-2.5"
+          onSubmit={(event) => {
+            event.preventDefault();
+            onClose();
+          }}
+        >
+          <h2 className="text-sm font-semibold leading-5 text-slate-500">
+            주차장 수정
+          </h2>
+          <div className="flex min-h-[232px] w-full flex-col justify-center gap-2.5">
+            <Field label="주차장 이름 *" placeholder="주차장 이름 입력" />
+            <Field label="주소" placeholder="주소 입력" />
+            <Field
+              label="주차 가능 대수 *"
+              placeholder="주차 가능 대수 입력"
+              inputMode="numeric"
+              icon="uil:sort"
+            />
+            <div className="flex w-full items-center justify-between">
+              <span className="text-sm font-normal leading-5 text-slate-800">
+                요금
+              </span>
+              <EditFeeToggle
+                enabled={feeEnabled}
+                onClick={() => setFeeEnabled((value) => !value)}
+              />
+            </div>
           </div>
-        </div>
-        <Button type="submit" className="w-full">
-          수정하기
-        </Button>
-      </form>
-    </Panel>
-  </ModalBackdrop>
-);
+          <Button type="submit" className="w-full">
+            수정하기
+          </Button>
+        </form>
+      </Panel>
+    </ModalBackdrop>
+  );
+};
 
 const MainPage = () => {
   const [menuOpen, setMenuOpen] = useState(false);
