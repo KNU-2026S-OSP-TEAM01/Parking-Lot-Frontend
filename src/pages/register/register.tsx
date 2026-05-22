@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, CenterPage, Field, Logo, Panel } from "../../components/openpark/ui";
+import { useSignupApiV1SignupPost } from "../../api/generated";
+import {
+  Button,
+  CenterPage,
+  Field,
+  Logo,
+  Panel,
+} from "../../components/openpark/ui";
+import { getApiErrorMessage } from "../../services/apiError";
 
 type RegisterStep = 1 | 2 | 3;
 
@@ -21,7 +29,55 @@ const Progress = ({ step }: { step: RegisterStep }) => (
 
 const RegisterPage = () => {
   const [step, setStep] = useState<RegisterStep>(1);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [username, setUsername] = useState("");
+  const [formError, setFormError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const signupMutation = useSignupApiV1SignupPost({
+    mutation: {
+      onSuccess: () => {
+        setFormError(null);
+        setStep(3);
+      },
+      onError: (error) => {
+        setFormError(
+          getApiErrorMessage(error, "회원가입 요청을 처리하지 못했습니다.")
+        );
+      },
+    },
+  });
+
+  const goNextStep = () => {
+    if (!email.trim() || !password || !passwordConfirm) {
+      setFormError("필수 값을 모두 입력해 주세요.");
+      return;
+    }
+
+    if (password !== passwordConfirm) {
+      setFormError("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    setFormError(null);
+    setStep(2);
+  };
+
+  const submitSignup = () => {
+    if (!username.trim()) {
+      setFormError("필수 값을 모두 입력해 주세요.");
+      return;
+    }
+
+    signupMutation.mutate({
+      data: {
+        username: username.trim(),
+        email: email.trim(),
+        password,
+      },
+    });
+  };
 
   return (
     <CenterPage>
@@ -40,15 +96,39 @@ const RegisterPage = () => {
           {step === 1 ? (
             <>
               <div className="flex min-h-56 w-full flex-col gap-4">
-                <Field label="아이디 *" placeholder="아이디 입력" />
-                <Field label="비밀번호 *" placeholder="비밀번호 입력" type="password" />
+                <Field
+                  label="이메일 *"
+                  placeholder="이메일 입력"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  autoComplete="email"
+                  required
+                />
+                <Field
+                  label="비밀번호 *"
+                  placeholder="비밀번호 입력"
+                  type="password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  autoComplete="new-password"
+                  required
+                />
                 <Field
                   label="비밀번호 확인 *"
                   placeholder="비밀번호 확인 입력"
                   type="password"
+                  value={passwordConfirm}
+                  onChange={(event) => setPasswordConfirm(event.target.value)}
+                  autoComplete="new-password"
+                  required
                 />
               </div>
-              <Button className="w-full" onClick={() => setStep(2)}>
+              {formError ? (
+                <p className="-mt-2 text-xs font-medium leading-4 text-red-500">
+                  {formError}
+                </p>
+              ) : null}
+              <Button className="w-full" onClick={goNextStep}>
                 다음 단계
               </Button>
             </>
@@ -57,18 +137,38 @@ const RegisterPage = () => {
           {step === 2 ? (
             <>
               <div className="flex min-h-56 w-full flex-col">
-                <Field label="닉네임 *" placeholder="닉네임 입력" />
+                <Field
+                  label="닉네임 *"
+                  placeholder="닉네임 입력"
+                  value={username}
+                  onChange={(event) => setUsername(event.target.value)}
+                  autoComplete="username"
+                  required
+                />
               </div>
+              {formError ? (
+                <p className="-mt-2 text-xs font-medium leading-4 text-red-500">
+                  {formError}
+                </p>
+              ) : null}
               <div className="flex w-full gap-1">
                 <Button
                   tone="secondary"
                   className="min-w-0 flex-1"
-                  onClick={() => setStep(1)}
+                  onClick={() => {
+                    setFormError(null);
+                    setStep(1);
+                  }}
+                  disabled={signupMutation.isPending}
                 >
                   이전
                 </Button>
-                <Button className="min-w-0 flex-1" onClick={() => setStep(3)}>
-                  회원가입
+                <Button
+                  className="min-w-0 flex-1 disabled:cursor-not-allowed disabled:bg-slate-300"
+                  onClick={submitSignup}
+                  disabled={signupMutation.isPending}
+                >
+                  {signupMutation.isPending ? "처리 중..." : "회원가입"}
                 </Button>
               </div>
             </>
@@ -98,4 +198,3 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
-
