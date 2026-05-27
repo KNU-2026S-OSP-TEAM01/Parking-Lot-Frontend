@@ -63,6 +63,9 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.image_tag }}
+          build-args: |
+            BACKEND_URL=${{ secrets.BACKEND_URL }}
+            SWAGGER_URL=${{ secrets.SWAGGER_URL }}
           labels: |
             org.opencontainers.image.title=parking-lot-frontend
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
