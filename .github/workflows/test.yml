@@ -31,3 +31,5 @@ jobs:
 
       - name: Build frontend
         run: npm run build
+        env:
+          SWAGGER_URL: ${{ secrets.SWAGGER_URL }}
