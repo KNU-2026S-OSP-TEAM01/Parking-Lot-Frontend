@@ -131,6 +131,6 @@ jobs:
             exit 0
           fi
 
-          git commit -m "Deploy: 프론트엔드 (${{ steps.meta.outputs.image_tag }})"
+          git commit -m "Deploy: 프론트엔드(Parking Lot) (${{ steps.meta.outputs.image_tag }})"
           git remote set-url origin https://x-access-token:${{ secrets.DEPLOY_REPO_PAT }}@github.com/KNU-2026S-OSP-TEAM01/Deploy.git
           git push origin HEAD:main
