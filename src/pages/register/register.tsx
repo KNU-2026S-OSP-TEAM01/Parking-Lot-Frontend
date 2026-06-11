@@ -50,7 +50,7 @@ const RegisterPage = () => {
   });
 
   const goNextStep = () => {
-    if (!email.trim() || !password || !passwordConfirm) {
+    if (!username.trim() || !password || !passwordConfirm) {
       setFormError("필수 값을 모두 입력해 주세요.");
       return;
     }
@@ -65,7 +65,7 @@ const RegisterPage = () => {
   };
 
   const submitSignup = () => {
-    if (!username.trim()) {
+    if (!email.trim()) {
       setFormError("필수 값을 모두 입력해 주세요.");
       return;
     }
@@ -97,11 +97,11 @@ const RegisterPage = () => {
             <>
               <div className="flex min-h-56 w-full flex-col gap-4">
                 <Field
-                  label="이메일 *"
-                  placeholder="이메일 입력"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  autoComplete="email"
+                  label="아이디 *"
+                  placeholder="아이디 입력"
+                  value={username}
+                  onChange={(event) => setUsername(event.target.value)}
+                  autoComplete="username"
                   required
                 />
                 <Field
@@ -138,11 +138,11 @@ const RegisterPage = () => {
             <>
               <div className="flex min-h-56 w-full flex-col">
                 <Field
-                  label="닉네임 *"
-                  placeholder="닉네임 입력"
-                  value={username}
-                  onChange={(event) => setUsername(event.target.value)}
-                  autoComplete="username"
+                  label="이메일 *"
+                  placeholder="이메일 입력"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  autoComplete="email"
                   required
                 />
               </div>
