@@ -100,7 +100,7 @@ const CreateParkingLotPage = ({ onCreated }: CreateParkingLotPageProps) => {
 
     const data = {
       name: name.trim(),
-      address: address.trim() || null,
+      address: address.trim(),
       total_spaces: totalSpacesNumber,
       ...(feeEnabled
         ? {

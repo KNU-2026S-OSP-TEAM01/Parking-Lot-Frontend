@@ -66,7 +66,7 @@ export interface LoginRequest {
 
 export interface LotCreate {
   name: string;
-  address?: string | null;
+  address: string;
   /** @exclusiveMinimum 0 */
   total_spaces: number;
   base_fee?: number;
@@ -81,7 +81,7 @@ export interface LotOut {
   id: string;
   owner_user_id: string;
   name: string;
-  address: string | null;
+  address: string;
   total_spaces: number;
   available_spaces: number;
   base_fee: number;
@@ -89,6 +89,8 @@ export interface LotOut {
   extra_fee_per_unit: number;
   extra_fee_unit_minutes: number;
   daily_max_fee: number | null;
+  latitude: number;
+  longitude: number;
   api_key: string;
   created_at: string;
   updated_at: string;
